@@ -1,38 +1,27 @@
-.App {
-  text-align: center;
+body {
+  background: #f5f9fc;
+  font-family: "Segoe UI", sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.form-card, .submitted-card {
+  border-radius: 12px;
+  background: white;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.form-title {
+  color: #004080;
+  font-weight: bold;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.submitted-title {
+  color: #008000;
 }
 
-.App-link {
-  color: #61dafb;
+.submit-btn {
+  background-color: #008000 !important;
+  border: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button {
+  border-radius: 6px !important;
 }

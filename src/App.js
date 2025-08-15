@@ -1,25 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import CreditCardApplicationForm from "./components/CreditCardApplicationForm";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CreditCardApplicationForm />
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+// import React from 'react';
+// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import ApplicationForm from './pages/ApplicationForm';
+// import ApplicationSubmitted from './pages/ApplicationSubmitted';
+// import Home from './pages/Home';
+
+// function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<ApplicationForm />} />
+//         <Route path="/submitted" element={<ApplicationSubmitted />} />
+//         <Route path="/home" element={<Home />} />
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;
+
+
+// import React from "react";
+// import { BrowserRouter, Routes, Route } from "react-router";
+// import CardApplication from "./components/CardApplication";
+// import CardSubmission from "./components/CardSubmission";
+// import HomePage from "./components/HomePage";
+
+// function App() {
+//   return (
+//     <BrowserRouter>
+//       <Routes>
+//         <Route path="/" element={<CardApplication />} />
+//         <Route path="/submission" element={<CardSubmission />} />
+//         <Route path="/home" element={<HomePage />} />
+//       </Routes>
+//     </BrowserRouter>
+//   );
+// }
+
+// export default App;
+
+
+
