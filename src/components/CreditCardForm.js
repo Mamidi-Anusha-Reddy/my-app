@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { submitApplication } from "../services/apiService";
-import ApplicationConfirmation from "./ApplicationConfirmation";
+import "bootstrap/dist/css/bootstrap.min.css";
+import ConfirmationPage from "./ConfirmationPage";
 
 const creditCardTypes = [
   { label: "Gold Card", value: "Gold Card" },
   { label: "Platinum Card", value: "Platinum Card" },
   { label: "Silver Card", value: "Silver Card" },
 ];
-
 const profileTypes = [
   { label: "Existing Profile", value: "Existing Profile" },
   { label: "New Profile", value: "New Profile" },
@@ -24,171 +23,211 @@ const initialFormData = {
   profileType: "",
 };
 
-function CreditCardForm() {
+function CreditCardApplicationForm() {
   const [formData, setFormData] = useState(initialFormData);
   const [submitted, setSubmitted] = useState(false);
-  const [savedApp, setSavedApp] = useState(null);
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData({ ...formData, [name]: files ? files[0] : value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await submitApplication(formData);
-      setSavedApp(response.data); // store backend response
-      setSubmitted(true);
-    } catch (err) {
-      console.error("Error saving application", err);
-      alert("Failed to submit application. Try again.");
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
   };
 
+  // Form validation - basic required fields check
+  const validateForm = () => {
+    return (
+      formData.fullName.trim() &&
+      formData.phoneNumber.trim() &&
+      formData.email.trim() &&
+      formData.creditCardType.trim() &&
+      formData.idProof &&
+      formData.addressProof &&
+      formData.incomeProof &&
+      formData.profileType.trim()
+    );
+  };
+
+  // Submit handler - go to confirmation page
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      alert("Please fill all required fields and upload files.");
+      return;
+    }
+    setSubmitted(true);
+  };
+
+  // Edit form - back to form page with data
+  const handleEdit = () => {
+    setSubmitted(false);
+  };
+
+  // Helper function to display file name or placeholder
+  const fileNameOrPlaceholder = (file) => (file ? file.name : "No file chosen");
+
   return (
-    <div>
+    <div className="container mt-3">
       {!submitted ? (
-        <div
-          className="container py-4"
-          style={{
-            maxWidth: "900px",
-            margin: "auto",
-            backgroundColor: "#ffffff",
-            boxShadow: "0 0 15px rgba(0,0,0,0.1)",
-            borderRadius: "8px",
-            padding: "30px 40px",
-            marginTop: "40px",
-          }}
-        >
-          <h3
-            className="text-center mb-4"
-            style={{
-              fontWeight: "700",
-              color: "#313335ff",
-              letterSpacing: "1px",
-            }}
-          >
-            Credit Card Application Form
-          </h3>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <div className="mb-3">
+            <label htmlFor="fullName" className="form-label">
+              Full Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-          {/* Form UI (your original CSS) */}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label">Full Name *</label>
-              <input
-                type="text"
-                className="form-control"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label htmlFor="phoneNumber" className="form-label">
+              Phone Number
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              pattern="[0-9]{10,15}"
+              required
+            />
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Phone Number *</label>
-              <input
-                type="tel"
-                className="form-control"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email Address
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Email *</label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label htmlFor="profileType" className="form-label">
+              Profile Type
+            </label>
+            <select
+              className="form-select"
+              id="profileType"
+              name="profileType"
+              value={formData.profileType}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Profile Type</option>
+              {profileTypes.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Credit Card Type *</label>
-              <select
-                className="form-select"
-                name="creditCardType"
-                value={formData.creditCardType}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select</option>
-                {creditCardTypes.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="mb-3">
+            <label htmlFor="creditCardType" className="form-label">
+              Credit Card Type
+            </label>
+            <select
+              className="form-select"
+              id="creditCardType"
+              name="creditCardType"
+              value={formData.creditCardType}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Credit Card Type</option>
+              {creditCardTypes.map((card) => (
+                <option key={card.value} value={card.value}>
+                  {card.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">ID Proof *</label>
-              <input
-                type="file"
-                className="form-control"
-                name="idProof"
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label htmlFor="idProof" className="form-label">
+              ID Proof
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              id="idProof"
+              name="idProof"
+              onChange={handleChange}
+              accept="image/*,.pdf"
+              required
+            />
+            <small className="form-text text-muted">
+              {fileNameOrPlaceholder(formData.idProof)}
+            </small>
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Address Proof *</label>
-              <input
-                type="file"
-                className="form-control"
-                name="addressProof"
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label htmlFor="addressProof" className="form-label">
+              Address Proof
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              id="addressProof"
+              name="addressProof"
+              onChange={handleChange}
+              accept="image/*,.pdf"
+              required
+            />
+            <small className="form-text text-muted">
+              {fileNameOrPlaceholder(formData.addressProof)}
+            </small>
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Income Proof *</label>
-              <input
-                type="file"
-                className="form-control"
-                name="incomeProof"
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label htmlFor="incomeProof" className="form-label">
+              Income Proof
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              id="incomeProof"
+              name="incomeProof"
+              onChange={handleChange}
+              accept="image/*,.pdf"
+              required
+            />
+            <small className="form-text text-muted">
+              {fileNameOrPlaceholder(formData.incomeProof)}
+            </small>
+          </div>
 
-            <div className="mb-3">
-              <label className="form-label">Profile Type *</label>
-              <select
-                className="form-select"
-                name="profileType"
-                value={formData.profileType}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select</option>
-                {profileTypes.map((p) => (
-                  <option key={p.value} value={p.value}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button type="submit" className="btn btn-success w-100">
-              Submit Application
-            </button>
-          </form>
-        </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>
       ) : (
-        <ApplicationConfirmation application={savedApp} />
+        <ConfirmationPage
+          formData={formData}
+          onEdit={handleEdit}
+          onFinalSubmit={() => setSubmitted(false)}
+        />
       )}
     </div>
   );
 }
 
-export default CreditCardForm;
+export default CreditCardApplicationForm;
