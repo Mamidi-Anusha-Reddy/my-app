@@ -23,7 +23,7 @@ const initialFormData = {
   profileType: "",
 };
 
-function CreditCardApplicationForm() {
+function CreditCardForm() {
   const [formData, setFormData] = useState(initialFormData);
   const [submitted, setSubmitted] = useState(false);
 
@@ -230,4 +230,4 @@ function CreditCardApplicationForm() {
   );
 }
 
-export default CreditCardApplicationForm;
+export default CreditCardForm;
