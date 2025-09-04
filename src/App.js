@@ -28,12 +28,17 @@
 // export default App;
 
 import React from "react";
-import CreditCardForm from "./components/CreditCardForm";
+import CreditCardApplicationForm from "./components/CreditCardApplicationForm";
 
 function App() {
-  return <CreditCardForm />;
+  return (
+    <div>
+      <CreditCardApplicationForm />
+    </div>
+  );
 }
 
 export default App;
+
 
 
