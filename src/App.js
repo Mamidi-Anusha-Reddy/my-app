@@ -31,14 +31,11 @@ import React from "react";
 import CreditCardApplicationForm from "./components/CreditCardApplicationForm";
 
 function App() {
-  return (
-    <div>
-      <CreditCardApplicationForm />
-    </div>
-  );
+  return <CreditCardApplicationForm />;
 }
 
 export default App;
+
 
 
 
