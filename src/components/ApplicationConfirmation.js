@@ -13,7 +13,7 @@ function ConfirmationPage({ formData, onEdit, onFinalSubmit }) {
       await submitApplication(formData);
       setSuccess(true);
       onFinalSubmit();
-    } catch (err) {
+    } catch {
       setError("Failed to submit application, please try again.");
     } finally {
       setLoading(false);
@@ -21,32 +21,32 @@ function ConfirmationPage({ formData, onEdit, onFinalSubmit }) {
   };
 
   return (
-    <div className="container mt-3">
-      <h3>Confirm Your Details</h3>
-      <dl className="row">
-        <dt className="col-sm-3">Full Name</dt>
-        <dd className="col-sm-9">{formData.fullName || "-"}</dd>
+    <div>
+      <h3 className="text-center mb-4">Confirm Your Details</h3>
+      <dl className="row mb-3">
+        <dt className="col-sm-4">Full Name</dt>
+        <dd className="col-sm-8">{formData.fullName || "-"}</dd>
 
-        <dt className="col-sm-3">Email Address</dt>
-        <dd className="col-sm-9">{formData.email || "-"}</dd>
+        <dt className="col-sm-4">Email Address</dt>
+        <dd className="col-sm-8">{formData.email || "-"}</dd>
 
-        <dt className="col-sm-3">Phone Number</dt>
-        <dd className="col-sm-9">{formData.phoneNumber || "-"}</dd>
+        <dt className="col-sm-4">Phone Number</dt>
+        <dd className="col-sm-8">{formData.phoneNumber || "-"}</dd>
 
-        <dt className="col-sm-3">Profile Type</dt>
-        <dd className="col-sm-9">{formData.profileType || "-"}</dd>
+        <dt className="col-sm-4">Profile Type</dt>
+        <dd className="col-sm-8">{formData.profileType || "-"}</dd>
 
-        <dt className="col-sm-3">Credit Card Type</dt>
-        <dd className="col-sm-9">{formData.creditCardType || "-"}</dd>
+        <dt className="col-sm-4">Credit Card Type</dt>
+        <dd className="col-sm-8">{formData.creditCardType || "-"}</dd>
 
-        <dt className="col-sm-3">ID Proof File</dt>
-        <dd className="col-sm-9">{formData.idProof ? formData.idProof.name : "-"}</dd>
+        <dt className="col-sm-4">ID Proof File</dt>
+        <dd className="col-sm-8">{formData.idProof ? formData.idProof.name : "-"}</dd>
 
-        <dt className="col-sm-3">Address Proof File</dt>
-        <dd className="col-sm-9">{formData.addressProof ? formData.addressProof.name : "-"}</dd>
+        <dt className="col-sm-4">Address Proof File</dt>
+        <dd className="col-sm-8">{formData.addressProof ? formData.addressProof.name : "-"}</dd>
 
-        <dt className="col-sm-3">Income Proof File</dt>
-        <dd className="col-sm-9">{formData.incomeProof ? formData.incomeProof.name : "-"}</dd>
+        <dt className="col-sm-4">Income Proof File</dt>
+        <dd className="col-sm-8">{formData.incomeProof ? formData.incomeProof.name : "-"}</dd>
       </dl>
 
       {error && <div className="alert alert-danger">{error}</div>}
@@ -55,13 +55,14 @@ function ConfirmationPage({ formData, onEdit, onFinalSubmit }) {
           Application submitted successfully!
         </div>
       )}
-
-      <button className="btn btn-secondary me-2" onClick={onEdit} disabled={loading}>
-        Edit
-      </button>
-      <button className="btn btn-primary" onClick={handleFinalSubmit} disabled={loading}>
-        {loading ? "Submitting..." : "Confirm & Submit"}
-      </button>
+      <div className="text-center">
+        <button className="btn btn-secondary me-2" onClick={onEdit} disabled={loading}>
+          Edit
+        </button>
+        <button className="btn btn-success" onClick={handleFinalSubmit} disabled={loading}>
+          {loading ? "Submitting..." : "Confirm & Submit"}
+        </button>
+      </div>
     </div>
   );
 }
