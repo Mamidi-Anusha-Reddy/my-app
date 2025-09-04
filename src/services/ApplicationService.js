@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8080/api/applications"; // backend url
 
-// Create new application (with files)
+// Submit application with files
 export const submitApplication = (formData) => {
   const data = new FormData();
   data.append("fullName", formData.fullName);
@@ -19,14 +19,9 @@ export const submitApplication = (formData) => {
   });
 };
 
-// Fetch application details by ID
-export const getApplication = (id) => {
-  return axios.get(`${API_BASE_URL}/${id}`);
-};
+// Get application details by ID
+export const getApplication = (id) => axios.get(`${API_BASE_URL}/${id}`);
 
-// Fetch document by ID + type
-export const getDocument = (id, docType) => {
-  return axios.get(`${API_BASE_URL}/${id}/documents/${docType}`, {
-    responseType: "blob",
-  });
-};
+// Get document file by type
+export const getDocument = (id, docType) =>
+  axios.get(`${API_BASE_URL}/${id}/documents/${docType}`, { responseType: "blob" });
