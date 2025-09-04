@@ -12,3 +12,18 @@ export const submitApplication = (formData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
+import { submitApplication } from "../services/apiService";  // ⬅️ at top of file
+
+// Final submission after confirmation page
+const handleFinalSubmit = async () => {
+  try {
+    const response = await submitApplication(formData);
+    console.log("Application saved:", response.data);
+    setFinalSubmit(true);
+  } catch (error) {
+    console.error("Error submitting application:", error);
+    alert("Something went wrong while submitting. Please try again.");
+  }
+};
+
