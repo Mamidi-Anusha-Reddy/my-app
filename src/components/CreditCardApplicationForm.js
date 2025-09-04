@@ -65,8 +65,6 @@ function CreditCardApplicationForm() {
   // Final submission after confirmation page
   const handleFinalSubmit = () => {
     setFinalSubmit(true);
-    alert("Application Submitted Successfully!");
-    // You can add backend integration here.
   };
 
   // Edit form - back to form page with data
@@ -110,7 +108,7 @@ function CreditCardApplicationForm() {
         style={{
           fontWeight: "700",
           color: "#313335ff",
-          letterSpacing: "1.2px"
+          letterSpacing: "1px"
         }}
       >
         Credit Card Application Form
