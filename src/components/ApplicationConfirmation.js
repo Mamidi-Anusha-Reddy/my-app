@@ -1,62 +1,65 @@
 import React, { useState } from "react";
 import { submitApplication } from "../services/applicationService";
 
-function ConfirmationPage({ formData, onEdit, onFinalSubmit }) {
+// No markup/spacing changed, still Bootstrap
+function ConfirmationPage({ formData, onEdit, resetForm }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(null);
 
   const handleFinalSubmit = async () => {
     setLoading(true);
-    setError(null);
+    setError("");
     try {
       await submitApplication(formData);
       setSuccess(true);
-      onFinalSubmit();
-    } catch {
-      setError("Failed to submit application, please try again.");
+      setTimeout(resetForm, 2000); // Reset after 2 seconds for user to see success
+    } catch (err) {
+      setError("Failed to submit application. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  if (success)
+    return (
+      <div className="alert alert-success text-center">
+        Application submitted successfully!
+      </div>
+    );
+
   return (
     <div>
-      <h3 className="text-center mb-4">Confirm Your Details</h3>
-      <dl className="row mb-3">
-        <dt className="col-sm-4">Full Name</dt>
-        <dd className="col-sm-8">{formData.fullName || "-"}</dd>
-
-        <dt className="col-sm-4">Email Address</dt>
-        <dd className="col-sm-8">{formData.email || "-"}</dd>
-
-        <dt className="col-sm-4">Phone Number</dt>
-        <dd className="col-sm-8">{formData.phoneNumber || "-"}</dd>
-
-        <dt className="col-sm-4">Profile Type</dt>
-        <dd className="col-sm-8">{formData.profileType || "-"}</dd>
-
-        <dt className="col-sm-4">Credit Card Type</dt>
-        <dd className="col-sm-8">{formData.creditCardType || "-"}</dd>
-
-        <dt className="col-sm-4">ID Proof File</dt>
-        <dd className="col-sm-8">{formData.idProof ? formData.idProof.name : "-"}</dd>
-
-        <dt className="col-sm-4">Address Proof File</dt>
-        <dd className="col-sm-8">{formData.addressProof ? formData.addressProof.name : "-"}</dd>
-
-        <dt className="col-sm-4">Income Proof File</dt>
-        <dd className="col-sm-8">{formData.incomeProof ? formData.incomeProof.name : "-"}</dd>
-      </dl>
-
+      <h4 className="mb-4 text-center">Please Confirm Your Details</h4>
+      <ul className="list-group mb-3">
+        <li className="list-group-item">
+          <b>Full Name:</b> {formData.fullName}
+        </li>
+        <li className="list-group-item">
+          <b>Phone Number:</b> {formData.phoneNumber}
+        </li>
+        <li className="list-group-item">
+          <b>Email Address:</b> {formData.email}
+        </li>
+        <li className="list-group-item">
+          <b>Profile Type:</b> {formData.profileType}
+        </li>
+        <li className="list-group-item">
+          <b>Credit Card Type:</b> {formData.creditCardType}
+        </li>
+        <li className="list-group-item">
+          <b>ID Proof:</b> {formData.idProof ? formData.idProof.name : "-"}
+        </li>
+        <li className="list-group-item">
+          <b>Address Proof:</b> {formData.addressProof ? formData.addressProof.name : "-"}
+        </li>
+        <li className="list-group-item">
+          <b>Income Proof:</b> {formData.incomeProof ? formData.incomeProof.name : "-"}
+        </li>
+      </ul>
       {error && <div className="alert alert-danger">{error}</div>}
-      {success && (
-        <div className="alert alert-success">
-          Application submitted successfully!
-        </div>
-      )}
-      <div className="text-center">
-        <button className="btn btn-secondary me-2" onClick={onEdit} disabled={loading}>
+      <div className="d-flex justify-content-between">
+        <button className="btn btn-outline-secondary" onClick={onEdit} disabled={loading}>
           Edit
         </button>
         <button className="btn btn-success" onClick={handleFinalSubmit} disabled={loading}>
@@ -66,5 +69,4 @@ function ConfirmationPage({ formData, onEdit, onFinalSubmit }) {
     </div>
   );
 }
-
 export default ConfirmationPage;
