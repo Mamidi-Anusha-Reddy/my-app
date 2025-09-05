@@ -12,20 +12,19 @@
 // export default App;
 
 
-// import React from "react";
-// import CreditCardForm from "./components/CreditCardForm";
-// import ApplicationConfirmation from "./components/ApplicationConfirmation";
+import React from 'react';
+import CreditCardApplicationForm from './CreditCardApplicationForm';
+import './App.css';
 
-// function App() {
-//   return (
-//     <div>
-//       <CreditCardForm />
-//       <ApplicationConfirmation />
-//     </div>
-//   );
-// }
+function App() {
+  return (
+    <div className="App">
+      <CreditCardApplicationForm />
+    </div>
+  );
+}
 
-// export default App;
+export default App;
 
 import React from "react";
 import CreditCardApplicationForm from "./components/CreditCardApplicationForm";
