@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { submitApplication } from './services/applicationService';
 
 const creditCardTypes = [
   { label: "Gold Card", value: "Gold Card" },
@@ -63,8 +64,29 @@ function CreditCardApplicationForm() {
   };
 
   // Final submission after confirmation page
-  const handleFinalSubmit = () => {
-    setFinalSubmit(true);
+  const handleFinalSubmit = async () => {
+    try {
+      const applicationData = {
+        fullName: formData.fullName,
+        phoneNumber: formData.phoneNumber,
+        email: formData.email,
+        creditCardType: formData.creditCardType,
+        profileType: formData.profileType
+      };
+      
+      const files = {
+        idProof: formData.idProof,
+        addressProof: formData.addressProof,
+        incomeProof: formData.incomeProof
+      };
+      
+      const result = await submitApplication(applicationData, files);
+      console.log('Application submitted successfully:', result);
+      setFinalSubmit(true);
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('Failed to submit application. Please try again.');
+    }
   };
 
   // Edit form - back to form page with data
@@ -304,7 +326,7 @@ function CreditCardApplicationForm() {
               business days.
             </p>
           </form>
-        </>
+        </>>
       )}
 
       {/* Confirmation Page */}
@@ -413,7 +435,7 @@ function CreditCardApplicationForm() {
           >
             View
           </a>
-        </>
+        </>>
       ) : (
         "Not Submitted"
       )}
@@ -433,7 +455,7 @@ function CreditCardApplicationForm() {
           >
             View
           </a>
-        </>
+        </>>
       ) : (
         "Not Submitted"
       )}
@@ -453,7 +475,7 @@ function CreditCardApplicationForm() {
           >
             View
           </a>
-        </>
+        </>>
       ) : (
         "Not Submitted"
       )}
@@ -475,7 +497,7 @@ function CreditCardApplicationForm() {
         Go Back to Home
       </button>
     </div>
-  </>
+  </>>
 ) : (
   <div className="d-flex justify-content-center gap-3 flex-wrap mt-4">
     <button
