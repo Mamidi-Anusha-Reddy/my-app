@@ -2,6 +2,249 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { submitApplication } from './services/applicationService';
 
+const initialFormData = {
+  fullName: "",
+  phoneNumber: "",
+  email: "",
+  creditCardType: "",
+  idProof: null,
+  addressProof: null,
+  incomeProof: null,
+  profileType: ""
+};
+
+function CreditCardApplicationForm() {
+  const [formData, setFormData] = useState(initialFormData);
+  const [submitted, setSubmitted] = useState(false);
+  const [finalSubmit, setFinalSubmit] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const validateForm = () => {
+    return (
+      formData.fullName.trim() &&
+      formData.phoneNumber.trim() &&
+      formData.email.trim() &&
+      formData.creditCardType.trim() &&
+      formData.idProof &&
+      formData.addressProof &&
+      formData.incomeProof &&
+      formData.profileType.trim()
+    );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      alert("Please fill all required fields and upload files.");
+      return;
+    }
+    setSubmitted(true);
+  };
+
+  const handleFinalSubmit = async () => {
+    try {
+      const applicationData = {
+        fullName: formData.fullName,
+        phoneNumber: formData.phoneNumber,
+        email: formData.email,
+        creditCardType: formData.creditCardType,
+        profileType: formData.profileType
+      };
+      
+      const files = {
+        idProof: formData.idProof,
+        addressProof: formData.addressProof,
+        incomeProof: formData.incomeProof
+      };
+      
+      const result = await submitApplication(applicationData, files);
+      console.log('Application submitted successfully:', result);
+      setFinalSubmit(true);
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('Failed to submit application. Please try again.');
+    }
+  };
+
+  const handleEdit = () => {
+    setSubmitted(false);
+    setFinalSubmit(false);
+  };
+
+  const handleGoBack = () => {
+    setFormData(initialFormData);
+    setSubmitted(false);
+    setFinalSubmit(false);
+  };
+
+  return (
+    <div className="container py-4" style={{ maxWidth: "800px" }}>
+      <h3 className="text-center mb-4">Credit Card Application Form</h3>
+
+      {!submitted ? (
+        <form onSubmit={handleSubmit} className="p-4 bg-light rounded">
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <label className="form-label">Full Name *</label>
+              <input
+                type="text"
+                className="form-control"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label">Phone Number *</label>
+              <input
+                type="tel"
+                className="form-control"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Email Address *</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Credit Card Type *</label>
+            <select
+              className="form-select"
+              name="creditCardType"
+              value={formData.creditCardType}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select card type</option>
+              <option value="Gold Card">Gold Card</option>
+              <option value="Platinum Card">Platinum Card</option>
+              <option value="Silver Card">Silver Card</option>
+            </select>
+          </div>
+
+          <div className="row mb-3">
+            <div className="col-md-4">
+              <label className="form-label">ID Proof *</label>
+              <input
+                type="file"
+                className="form-control"
+                name="idProof"
+                onChange={handleChange}
+                accept=".jpg,.jpeg,.png,.pdf"
+                required
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Address Proof *</label>
+              <input
+                type="file"
+                className="form-control"
+                name="addressProof"
+                onChange={handleChange}
+                accept=".jpg,.jpeg,.png,.pdf"
+                required
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Income Proof *</label>
+              <input
+                type="file"
+                className="form-control"
+                name="incomeProof"
+                onChange={handleChange}
+                accept=".jpg,.jpeg,.png,.pdf"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Profile Type *</label>
+            <select
+              className="form-select"
+              name="profileType"
+              value={formData.profileType}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select profile type</option>
+              <option value="New Profile">New Profile</option>
+              <option value="Existing Profile">Existing Profile</option>
+            </select>
+          </div>
+
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary px-4">
+              Submit Application
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div className="p-4 border rounded bg-white">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h4 className="text-success mb-0">✓ Application Review</h4>
+            <button className="btn btn-sm btn-outline-primary" onClick={handleEdit}>
+              Edit
+            </button>
+          </div>
+
+          <div className="mb-3">
+            <strong>Name:</strong> {formData.fullName}<br />
+            <strong>Email:</strong> {formData.email}<br />
+            <strong>Phone:</strong> {formData.phoneNumber}<br />
+            <strong>Card Type:</strong> {formData.creditCardType}<br />
+            <strong>Profile:</strong> {formData.profileType}
+          </div>
+
+          {finalSubmit ? (
+            <div>
+              <div className="alert alert-success">
+                Application Submitted Successfully!
+              </div>
+              <button onClick={handleGoBack} className="btn btn-success">
+                Go Back to Home
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button onClick={handleFinalSubmit} className="btn btn-success me-2">
+                Final Submit
+              </button>
+              <button onClick={handleGoBack} className="btn btn-secondary">
+                Go Back to Home
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default CreditCardApplicationForm;
+
 const creditCardTypes = [
   { label: "Gold Card", value: "Gold Card" },
   { label: "Platinum Card", value: "Platinum Card" },
@@ -326,7 +569,7 @@ function CreditCardApplicationForm() {
               business days.
             </p>
           </form>
-        </>>
+        </>
       )}
 
       {/* Confirmation Page */}
@@ -435,7 +678,7 @@ function CreditCardApplicationForm() {
           >
             View
           </a>
-        </>>
+        </>
       ) : (
         "Not Submitted"
       )}
@@ -455,7 +698,7 @@ function CreditCardApplicationForm() {
           >
             View
           </a>
-        </>>
+        </>
       ) : (
         "Not Submitted"
       )}
@@ -475,7 +718,7 @@ function CreditCardApplicationForm() {
           >
             View
           </a>
-        </>>
+        </>
       ) : (
         "Not Submitted"
       )}
@@ -497,7 +740,7 @@ function CreditCardApplicationForm() {
         Go Back to Home
       </button>
     </div>
-  </>>
+  </>
 ) : (
   <div className="d-flex justify-content-center gap-3 flex-wrap mt-4">
     <button
