@@ -1,32 +1,41 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_BASE_URL = "http://localhost:8080/api/applications"; // backend url
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api',
+  timeout: 30000
+});
 
-// Create new application (with files)
-export const submitApplication = (formData) => {
-  const data = new FormData();
-  data.append("fullName", formData.fullName);
-  data.append("phoneNumber", formData.phoneNumber);
-  data.append("email", formData.email);
-  data.append("creditCardType", formData.creditCardType);
-  data.append("profileType", formData.profileType);
-  data.append("idProof", formData.idProof);
-  data.append("addressProof", formData.addressProof);
-  data.append("incomeProof", formData.incomeProof);
+export default api;
 
-  return axios.post(API_BASE_URL, data, {
-    headers: { "Content-Type": "multipart/form-data" },
+
+import api from './api';
+
+// Submit credit card application
+export const submitApplication = async (applicationData, files) => {
+  const formData = new FormData();
+  
+  formData.append('application', JSON.stringify(applicationData));
+  formData.append('idProof', files.idProof);
+  formData.append('addressProof', files.addressProof);
+  formData.append('incomeProof', files.incomeProof);
+  
+  const response = await api.post('/applications', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
+  
+  return response.data;
 };
 
-// Fetch application details by ID
-export const getApplication = (id) => {
-  return axios.get(`${API_BASE_URL}/${id}`);
+// Get all applications
+export const getAllApplications = async () => {
+  const response = await api.get('/applications');
+  return response.data;
 };
 
-// Fetch document by ID + type
-export const getDocument = (id, docType) => {
-  return axios.get(`${API_BASE_URL}/${id}/documents/${docType}`, {
-    responseType: "blob",
-  });
+// Get application by ID
+export const getApplicationById = async (id) => {
+  const response = await api.get(`/applications/${id}`);
+  return response.data;
 };
